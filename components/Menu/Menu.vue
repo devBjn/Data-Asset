@@ -9,45 +9,63 @@
                 </v-btn>
             </template>
             <v-list>
-                <Modal ref="modalRef" @close="handleClose" v-for="(item, index) in items" :key="index" :dialog="dialog">
-                    <template #modalButton>
-                        <v-list-item :class="colorBtn" class="rounded" tag="button" :style="{ width: '100%' }"
-                            @click="(i, dialog = $refs.modalRef.dialog) => item.method(i.id, dialog)">
-                            <v-list-item-icon>
-                                <v-icon v-text="item.icon" :color="item.color"></v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-content>
-                                <v-list-item-title v-text="item.title" :style="{ color: item.color }"></v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
 
+                <!-- <Modal ref="modalRef" @close="handleClose"  :dialog="dialog"> -->
+                <template>
+                    <v-list-item v-on="on" :class="colorBtn" class="rounded" tag="button" :style="{ width: '100%' }">
+                        <v-list-item-icon>
+                            <v-icon v-text="items[0].icon" :color="items[0].color"></v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                            <v-list-item-title v-text="items[0].title"
+                                :style="{ color: items[0].color }"></v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <Modal>
+                        <template #modalButton="{ on }">
+                            <v-list-item v-on="on" :class="colorBtn" class="rounded" tag="button"
+                                :style="{ width: '100%' }">
 
-                    </template>
-                    <template v-slot:modalContent>
-                        <v-card-title class="text-h5  lighten-2">
-                            <v-icon>{{ item.icon }}</v-icon>! Confirm delete
-                        </v-card-title>
-                        <v-divider></v-divider>
+                                <v-list-item-icon>
+                                    <v-icon v-text="items[1].icon" :color="items[1].color"></v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title v-text="items[1].title"
+                                        :style="{ color: items[1].color }"></v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
 
-                        <v-card-text class="text-body-1 py-4">
-                            Are you sure you want to delete this item?
-                        </v-card-text>
+                        </template>
+                        <template v-slot:modalContent>
+                            <v-card-title class="text-h5  lighten-2">
+                                <v-icon>{{ items[1].icon }}</v-icon>! Confirm delete
+                            </v-card-title>
+                            <v-divider></v-divider>
 
-                        <v-divider></v-divider>
+                            <v-card-text class="text-body-1 py-4">
+                                Are you sure you want to delete this item?
+                            </v-card-text>
 
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="red lighten-2" @click="deleteData()">
-                                <p class="white--text">Yes</p>
+                            <v-divider></v-divider>
 
-                            </v-btn>
-                            <v-btn @click="$refs.modalRef.dialog = false">
-                                <p class="black--text">No</p>
-                            </v-btn>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="red lighten-2" @click="deleteData()">
+                                    <p class="white--text">Yes</p>
 
-                        </v-card-actions>
-                    </template>
-                </Modal>
+                                </v-btn>
+                                <v-btn @click="handleClose">
+                                    <p class="black--text">No</p>
+                                </v-btn>
+
+                            </v-card-actions>
+
+                        </template>
+                    </Modal>
+
+                </template>
+
+                <!-- </Modal> -->
             </v-list>
 
 
@@ -85,7 +103,8 @@ export default {
             this.dialog = false
         },
         handleClose() {
-            this.dialog = false
+            // this.$refs.modalRef.reset()
+            console.log(this.$refs);
         }
     },
 

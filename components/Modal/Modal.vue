@@ -12,6 +12,7 @@
             <v-card>
                 <slot name="modalContent">
                 </slot>
+
             </v-card>
         </v-dialog>
     </div>
