@@ -15,7 +15,7 @@
         <template v-slot:item.type="{ item }">
             <div class="d-flex justify-space-between align-center pa-3">
                 <p>{{ item.type }}</p>
-                <Menu :itemId="item.id">
+                <Menu :itemId="item.id" @delete="$emit('delete')">
                 </Menu>
             </div>
         </template>
