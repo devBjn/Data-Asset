@@ -9,10 +9,10 @@
                 </v-btn>
             </template>
             <v-list>
-
+                {{ itemId }}
                 <!-- <Modal ref="modalRef" @close="handleClose"  :dialog="dialog"> -->
                 <template>
-                    <v-list-item v-on="on" :class="colorBtn" class="rounded" tag="button" :style="{ width: '100%' }">
+                    <v-list-item @click="items[0].method(itemId)" class="rounded" tag="button" :style="{ width: '100%' }">
                         <v-list-item-icon>
                             <v-icon v-text="items[0].icon" :color="items[0].color"></v-icon>
                         </v-list-item-icon>
@@ -21,10 +21,9 @@
                                 :style="{ color: items[0].color }"></v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <Modal>
+                    <Modal ref="modalRef">
                         <template #modalButton="{ on }">
-                            <v-list-item v-on="on" :class="colorBtn" class="rounded" tag="button"
-                                :style="{ width: '100%' }">
+                            <v-list-item v-on="on" class="rounded" tag="button" :style="{ width: '100%' }">
 
                                 <v-list-item-icon>
                                     <v-icon v-text="items[1].icon" :color="items[1].color"></v-icon>
@@ -103,8 +102,8 @@ export default {
             this.dialog = false
         },
         handleClose() {
-            // this.$refs.modalRef.reset()
-            console.log(this.$refs);
+            this.$refs.modalRef.dialog = false
+
         }
     },
 

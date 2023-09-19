@@ -7,9 +7,9 @@
       </div>
       <div>
 
-        <Modal :colorBtn="colorBtn" :dialog="dialog" :transition="transition">
-          <template v-slot:modalButton>
-            <v-icon color="white">
+        <Modal ref="modalRef" :colorBtn="colorBtn" :dialog="dialog" :transition="transition">
+          <template #modalButton="{ on }">
+            <v-icon v-on="on" color="white">
               {{ icons.plus }}
             </v-icon>
             <span>Add a new asset</span>
