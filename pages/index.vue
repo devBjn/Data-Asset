@@ -75,10 +75,10 @@
       </div>
     </div>
     <div>
-      <table-data />
+      <table-data @delete="$refs.popup.snackbar = true" />
     </div>
     <div>
-      <PopupAlert :snackbar='this.getSnackbar'></PopupAlert>
+      <PopupAlert ref="popup"/>
     </div>
   </div>
 </template>
@@ -113,7 +113,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("store", ["getSnackbar", "getData"]),
+    ...mapGetters("store", ["getData"]),
     categoryList() {
       return this.getData.map((item) => {
         return item.category
@@ -144,7 +144,13 @@ export default {
         size,
         type,
       }
-      await this.$store.dispatch("store/postData", payload)
+      try {
+		await this.$store.dispatch("store/postData", payload);
+		this.$refs.popup.snackbar = true;
+	  }
+	  catch (error) {
+		console.log(error);
+	  }
       this.$store.dispatch("store/getData")
       this.isRenderFormAdd = false;
     }

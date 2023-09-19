@@ -7,14 +7,10 @@ import {
 } from "../apis/dataAPI";
 
 export const state = () => ({
-  snackbar: false,
   data: [],
   detail: {},
 });
 export const getters = {
-  getSnackbar(state) {
-    return state.snackbar;
-  },
   getData(state) {
     return state.data;
   },
@@ -35,14 +31,7 @@ export const mutations = {
 };
 export const actions = {
   async deleteData({ commit }, id) {
-    try {
-      const res = await deleteDataTable(id);
-      if (res) {
-        commit("setSnackbar", true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    await deleteDataTable(id);
   },
   async getData({ commit }) {
     try {
@@ -55,15 +44,7 @@ export const actions = {
     }
   },
   async postData({ commit }, payload) {
-    try {
-      const res = await addDataTable(payload);
-
-      if (res) {
-        commit("setSnackbar", true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    await addDataTable(payload);
   },
   async getDetailData({ commit }, id) {
     try {

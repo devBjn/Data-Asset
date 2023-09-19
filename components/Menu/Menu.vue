@@ -12,7 +12,7 @@
 
                 <!-- <Modal ref="modalRef" @close="handleClose"  :dialog="dialog"> -->
                 <template>
-                    <v-list-item v-on="on" :class="colorBtn" class="rounded" tag="button" :style="{ width: '100%' }">
+                    <v-list-item :class="colorBtn" class="rounded" tag="button" :style="{ width: '100%' }">
                         <v-list-item-icon>
                             <v-icon v-text="items[0].icon" :color="items[0].color"></v-icon>
                         </v-list-item-icon>
@@ -21,17 +21,17 @@
                                 :style="{ color: items[0].color }"></v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <Modal>
+                    <Modal ref="modalRef">
                         <template #modalButton="{ on }">
                             <v-list-item v-on="on" :class="colorBtn" class="rounded" tag="button"
                                 :style="{ width: '100%' }">
 
                                 <v-list-item-icon>
-                                    <v-icon v-text="items[1].icon" :color="items[1].color"></v-icon>
+                                    <v-icon :color="items[1].color">{{ items[1].icon }}</v-icon>
                                 </v-list-item-icon>
                                 <v-list-item-content>
-                                    <v-list-item-title v-text="items[1].title"
-                                        :style="{ color: items[1].color }"></v-list-item-title>
+                                    <v-list-item-title
+                                        :style="{ color: items[1].color }">{{ items[1].title }}</v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>
 
@@ -98,13 +98,18 @@ export default {
     },
     methods: {
         async deleteData() {
-            await this.$store.dispatch("store/deleteData", this.itemId)
+            try {
+				await this.$store.dispatch("store/deleteData", this.itemId);
+				this.$emit("delete");
+			} catch (error) {
+				console.log(error);
+			}
             this.$store.dispatch("store/getData")
             this.dialog = false
         },
         handleClose() {
-            // this.$refs.modalRef.reset()
-            console.log(this.$refs);
+            this.$refs.modalRef.dialog = false
+            // console.log(this.$refs);
         }
     },
 
