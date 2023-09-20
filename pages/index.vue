@@ -9,10 +9,12 @@
 
         <Modal ref="modalRef" :colorBtn="colorBtn" :dialog="dialog" :transition="transition">
           <template #modalButton="{ on }">
-            <v-icon v-on="on" color="white">
-              {{ icons.plus }}
-            </v-icon>
-            <span>Add a new asset</span>
+            <v-btn v-on="on">
+              <v-icon color="white">
+                {{ icons.plus }}
+              </v-icon>
+              <span>Add a new asset</span>
+            </v-btn>
           </template>
           <template v-slot:modalContent>
             <v-card class="pa-3">
@@ -23,7 +25,7 @@
                     Add a new asset
                   </span>
                 </v-card-title>
-                <v-btn icon>
+                <v-btn icon @click="handleClose">
                   <v-icon>{{ icons.close }}</v-icon>
                 </v-btn>
               </div>
@@ -75,10 +77,12 @@
       </div>
     </div>
     <div>
-      <table-data />
+      <table-data @msg="msgAlert = 'Delete data successfully !'" @delete="$refs.popup.snackbar = true" />
     </div>
     <div>
-      <PopupAlert :snackbar='this.getSnackbar'></PopupAlert>
+      <PopupAlert :icons="icons.close" ref="popup">
+        <v-alert type="success">{{ msgAlert }}</v-alert>
+      </PopupAlert>
     </div>
   </div>
 </template>
@@ -104,6 +108,7 @@ export default {
       transition: "dialog - bottom - transition",
       colorBtn: "blue white--text",
       isRenderFormAdd: false,
+      msgAlert: "",
       formValue: {
         name: '',
         category: "audio",
@@ -113,7 +118,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("store", ["getSnackbar", "getData"]),
+    ...mapGetters("store", ["getData"]),
     categoryList() {
       return this.getData.map((item) => {
         return item.category
@@ -122,7 +127,7 @@ export default {
   },
   methods: {
     handleClose() {
-      this.dialog = false
+      this.$refs.modalRef.dialog = false
     },
     handleChange(e) {
       // Get the selected file
@@ -144,7 +149,15 @@ export default {
         size,
         type,
       }
-      await this.$store.dispatch("store/postData", payload)
+      try {
+        await this.$store.dispatch("store/postData", payload);
+        this.$refs.popup.snackbar = true;
+        this.$refs.modalRef.dialog = false
+        this.msgAlert = "Add data asset successfully !"
+      }
+      catch (error) {
+        console.log(error);
+      }
       this.$store.dispatch("store/getData")
       this.isRenderFormAdd = false;
     }
@@ -152,12 +165,16 @@ export default {
   },
 
   provide() {
-    return { icons: this.icons }
+    return { icons: this.icons, msgAlert: this.msgAlert }
   }
 }
 </script>
 <style>
 p {
   margin-bottom: 0 !important
+}
+
+.v-alert {
+  margin-bottom: 0;
 }
 </style>

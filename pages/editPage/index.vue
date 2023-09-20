@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div>
         <div class="mb-10 mt-5">
             <div class="d-flex justify-space-between">
@@ -49,6 +49,9 @@
                     </template>
                 </v-col>
             </v-row>
+            <PopupAlert :icons="icons.close" ref="popup">
+                <v-alert type="success">{{ msgAlert }}</v-alert>
+            </PopupAlert>
         </div>
     </div>
 </template>
@@ -66,7 +69,19 @@ export default {
                 type: "png",
                 dateAdded: "10/09/2023",
                 size: '12012',
-            }
+            },
+            msgAlert: "",
+            icons: {
+                glb: "mdi-movie-open",
+                jpeg: "mdi-image-multiple",
+                jpg: "mdi-image-multiple",
+                obj: "mdi-cube-outline",
+                png: "mdi-image-multiple",
+                more: "mdi-dots-horizontal",
+                plus: "mdi-plus",
+                close: "mdi-close",
+                arrowLeft: "mdi-arrow-left"
+            },
         }
     },
     computed: {
@@ -81,6 +96,7 @@ export default {
     mounted() {
         this.$store.dispatch("store/getData")
         this.$store.dispatch("store/getDetailData", this.$route.params.id)
+        console.log(this.$route.params);
         // After getting detailData, copy it into formValue
         this.$watch("detailData", (newDetailData) => {
             // Assuming detailData is an object with properties matching formValue
@@ -98,8 +114,10 @@ export default {
         },
         async handleUpdateData() {
             await this.$store.dispatch("store/updateData", this.formValue);
+            this.$refs.popup.snackbar = true;
+            this.msgAlert = "Update data asset successfully !"
             await this.$store.dispatch("store/getData")
-            this.$router.push('/')
+            await this.$router.push('/')
         }
     }
 }
@@ -110,4 +128,4 @@ export default {
     width: 70%;
     box-shadow: 5px 10px 8px 10px #888888;
 }
-</style>
+</style> -->

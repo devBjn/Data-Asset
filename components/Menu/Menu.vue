@@ -9,28 +9,34 @@
                 </v-btn>
             </template>
             <v-list>
-                {{ itemId }}
-                <!-- <Modal ref="modalRef" @close="handleClose"  :dialog="dialog"> -->
-                <template>
-                    <v-list-item @click="items[0].method(itemId)" class="rounded" tag="button" :style="{ width: '100%' }">
-                        <v-list-item-icon>
-                            <v-icon v-text="items[0].icon" :color="items[0].color"></v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-content>
-                            <v-list-item-title v-text="items[0].title"
-                                :style="{ color: items[0].color }"></v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
+                <div>
+                    <Modal>
+                        <template v-slot:modalButton>
+                            <v-list-item class="rounded" tag="button" @click="handleNavigate(itemId)"
+                                :style="{ width: '100%' }">
+                                <v-list-item-icon>
+                                    <v-icon v-text="items[0].icon" :color="items[0].color">
+                                    </v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title :style="{ color: items[0].color }">
+                                        {{ items[0].title }}
+
+                                    </v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </template>
+                    </Modal>
+
                     <Modal ref="modalRef">
                         <template #modalButton="{ on }">
                             <v-list-item v-on="on" class="rounded" tag="button" :style="{ width: '100%' }">
-
                                 <v-list-item-icon>
-                                    <v-icon v-text="items[1].icon" :color="items[1].color"></v-icon>
+                                    <v-icon :color="items[1].color">{{ items[1].icon }}</v-icon>
                                 </v-list-item-icon>
                                 <v-list-item-content>
-                                    <v-list-item-title v-text="items[1].title"
-                                        :style="{ color: items[1].color }"></v-list-item-title>
+                                    <v-list-item-title :style="{ color: items[1].color }">{{ items[1].title
+                                    }}</v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>
 
@@ -56,15 +62,12 @@
                                 <v-btn @click="handleClose">
                                     <p class="black--text">No</p>
                                 </v-btn>
-
                             </v-card-actions>
 
                         </template>
                     </Modal>
 
-                </template>
-
-                <!-- </Modal> -->
+                </div>
             </v-list>
 
 
@@ -78,34 +81,47 @@ import { mapGetters } from 'vuex'
 
 export default {
     data: () => ({
-        // items: [
-        //     { title: 'Edit', icon: "mdi-pencil", color: "#2196F3", method: (id) => { this.$router.push({ path: "/editData", params: { id } }) } },
-        //     { title: 'Delete', icon: "mdi-trash-can", color: "#F44336", method: .$refs.modalRef.dialog = false },
-        // ],
         dialog: false,
     }),
     props: ["itemId"],
-    inject: ["icons"],
+    inject: ["icons", "msgAlert"],
     computed: {
         ...mapGetters("store", ["getData"]),
         items() {
             return [
-                { title: 'Edit', icon: "mdi-pencil", color: "#2196F3", method: (id, dialog) => { this.$router.push({ path: "/editData", params: { id } }) } },
-                { title: 'Delete', icon: "mdi-trash-can", color: "#F44336", method: (id, dialog) => { dialog = true } },
+                { title: 'Edit', icon: "mdi-pencil", color: "#2196F3" },
+                { title: 'Delete', icon: "mdi-trash-can", color: "#F44336" },
             ]
+        },
+        msgAlert: {
+            get() {
+                return this.msgAlert
+            },
+            set() {
+                this.msgAlert = "Delete data successfully !"
+            }
         }
     },
     methods: {
         async deleteData() {
-            await this.$store.dispatch("store/deleteData", this.itemId)
+            try {
+                await this.$store.dispatch("store/deleteData", this.itemId);
+                this.$emit("delete");
+                this.$emit("msg")
+            } catch (error) {
+                console.log(error);
+            }
             this.$store.dispatch("store/getData")
-            this.dialog = false
+            this.dialog = false;
+
+        },
+        handleNavigate(id) {
+            this.$router.push({ path: `/editPage/${id}` })
         },
         handleClose() {
             this.$refs.modalRef.dialog = false
-
         }
-    },
+    }
 
 }
 </script>

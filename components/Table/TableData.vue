@@ -3,7 +3,7 @@
     <v-data-table :calculate-widths="true" :loading="isLoading" loading-text="Please wait....." :headers="headers"
         :items="this.getData" :items-per-page="5" show-select :single-select="singleSelect" class="elevation-1">
         <template v-slot:item.component="{ item }">
-            <NuxtLink :to="{ name: 'editData', params: { id: item.id } }">
+            <NuxtLink :to="{ path: `/editPage/${item.id}` }">
                 <div class="d-flex justify-space-between align-center pa-3">
                     <img class="image" :src="item.imgUrl" alt="">
                     <p>{{ item.component }}</p>
@@ -15,7 +15,7 @@
         <template v-slot:item.type="{ item }">
             <div class="d-flex justify-space-between align-center pa-3">
                 <p>{{ item.type }}</p>
-                <Menu :itemId="item.id">
+                <Menu @msg="$emit('msg')" :itemId="item.id" @delete="$emit('delete')">
                 </Menu>
             </div>
         </template>
@@ -79,12 +79,6 @@ export default {
 </script>
 
 <style scoped>
-/* .v-chip.v-size--default {
-    height: 500px;
-    width: 500px;
-    object-fit: contain;
-} */
-
 .image {
     width: 200px;
     height: 200px;
